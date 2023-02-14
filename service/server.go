@@ -1,4 +1,4 @@
-package ShermieSmtp
+package service
 
 import (
 	"bytes"
@@ -39,17 +39,17 @@ const Status3341 = "334 VXNlcm5hbWU6\r\n"
 const Status3342 = "334 UGFzc3dvcmQ6\r\n"
 const Status2501 = "250 AUTH LOGIN PLAINOK\r\n250-AUTH=LOGIN PLAIN\r\n250-STARTTLS\r\n250 8BITMIME\r\n"
 
-type Server struct {
-	client   []*Conn
+type server struct {
+	client   []*peer
 	port     int
 	listener *net.TCPListener
 }
 
-func NewServer(port int) *Server {
-	return &Server{port: port}
+func NewServer(port int) *server {
+	return &server{port: port}
 }
 
-func (i *Server) Start() {
+func (i *server) Start() {
 	address, err := net.ResolveTCPAddr("tcp", ":"+strconv.Itoa(i.port))
 	if err != nil {
 		fmt.Printf("%v", err)
@@ -68,20 +68,20 @@ func (i *Server) Start() {
 	select {}
 }
 
-func (i *Server) Listen() {
+func (i *server) Listen() {
 	for {
 		conn, err := i.listener.AcceptTCP()
 		if err != nil {
 			fmt.Printf("%v", err)
 			continue
 		}
-		client := (&Conn{connect: conn}).Initialize()
+		client := (&peer{connect: conn}).Initialize()
 		i.client = append(i.client, client)
 		go i.Handle(client)
 	}
 }
 
-func (i *Server) Handle(client *Conn) {
+func (i *server) Handle(client *peer) {
 	// 发送连接指令
 	client.Connected()
 	defer client.Close()

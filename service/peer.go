@@ -1,11 +1,11 @@
-package ShermieSmtp
+package service
 
 import (
 	"bufio"
 	"net"
 )
 
-type Conn struct {
+type peer struct {
 	connect  *net.TCPConn
 	reader   *bufio.Reader
 	writer   *bufio.Writer
@@ -17,20 +17,20 @@ type Conn struct {
 	data     []byte
 }
 
-func (i *Conn) Initialize() *Conn {
+func (i *peer) Initialize() *peer {
 	i.reader, i.writer = bufio.NewReader(i.connect), bufio.NewWriter(i.connect)
 	return i
 }
 
-func (i *Conn) Connected() {
+func (i *peer) Connected() {
 	_, _ = i.writer.Write([]byte(Status220))
 }
 
-func (i *Conn) Close() {
+func (i *peer) Close() {
 	_ = i.connect.Close()
 }
 
-func (i *Conn) ReceiveByte(length int) ([]byte, error) {
+func (i *peer) ReceiveByte(length int) ([]byte, error) {
 	data := make([]byte, length)
 	num, err := i.reader.Read(data)
 	if err != nil {
@@ -39,7 +39,7 @@ func (i *Conn) ReceiveByte(length int) ([]byte, error) {
 	return data[:num], nil
 }
 
-func (i *Conn) SendMessage(data []byte) {
+func (i *peer) SendMessage(data []byte) {
 	_, _ = i.writer.Write(data)
 	_ = i.writer.Flush()
 }

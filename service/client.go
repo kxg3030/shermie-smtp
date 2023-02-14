@@ -1,4 +1,4 @@
-package ShermieSmtp
+package service
 
 import (
 	"errors"
@@ -37,7 +37,7 @@ func (i *Client) Connect() {
 	defer func(conn net.Conn) {
 		_ = conn.Close()
 	}(conn)
-	server := (&Conn{connect: conn.(*net.TCPConn)}).Initialize()
+	server := (&peer{connect: conn.(*net.TCPConn)}).Initialize()
 	// 接受指令
 	data, err := server.ReceiveByte(64)
 	if err != nil {
