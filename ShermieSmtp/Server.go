@@ -87,10 +87,9 @@ func (i *Server) Handle(client *Conn) {
 	defer client.Close()
 	// 发送成功指令
 	client.SendMessage([]byte(Status220))
-	// 接收HELO指令:HELO d5c5ccce-19810\r\n
 	data, err := client.ReceiveByte(256)
 	if err != nil || string(data[:4]) != "HELO" {
-		fmt.Printf("error-1:%s\n", "helo验证失败")
+		fmt.Println("valid hello")
 		client.SendMessage([]byte(Error5031))
 		return
 	}
@@ -104,7 +103,7 @@ func (i *Server) Handle(client *Conn) {
 		return
 	}
 	if string(data[:10]) != "AUTH LOGIN" {
-		fmt.Printf("error-2:%v\n", err)
+		fmt.Println("valid auth login")
 		client.SendMessage([]byte(Error5031))
 		return
 	}
@@ -113,7 +112,7 @@ func (i *Server) Handle(client *Conn) {
 	// 读取用户名
 	data, err = client.ReceiveByte(256)
 	if err != nil {
-		fmt.Printf("error-3:%v\n", err)
+		fmt.Println("read username error")
 		return
 	}
 	client.username = string(bytes.Trim(data, "\r\n"))
@@ -122,7 +121,7 @@ func (i *Server) Handle(client *Conn) {
 	// 读取密码
 	data, err = client.ReceiveByte(256)
 	if err != nil {
-		fmt.Printf("error-4:%v\n", err)
+		fmt.Println("read password error")
 		return
 	}
 	client.password = string(bytes.Trim(data, "\r\n"))
@@ -135,11 +134,10 @@ func (i *Server) Handle(client *Conn) {
 		return
 	}
 	if string(data[:9]) != "MAIL FROM" {
-		fmt.Printf("error-6:%s\n", "mail from 验证失败")
+		fmt.Println("read mail from error")
 		client.SendMessage([]byte(Error550))
 		return
 	}
-	// 验证邮箱正确
 	// 邮箱地址解析
 	client.email = string(bytes.Trim(data, "\r\n"))
 	client.ip, err = net.ResolveIPAddr("ip", strings.Split(client.email, "@")[0])
@@ -149,18 +147,19 @@ func (i *Server) Handle(client *Conn) {
 	for {
 		data, err = client.ReceiveByte(256)
 		if err != nil {
-			fmt.Printf("error-7:%s\n", "mail to 接收失败")
+			fmt.Println("read mail to error")
 			client.SendMessage([]byte(Error550))
 			return
 		}
 		if string(data[:4]) != "RCPT" {
+			fmt.Println("valid rcpt error")
 			break
 		}
 		client.to = append(client.to, string(bytes.Trim(data, "\r\n")))
 		client.SendMessage([]byte(Status250))
 	}
 	if string(data[:4]) != "DATA" {
-		fmt.Printf("error-7:%s\n", "data 接收失败")
+		fmt.Println("valid data error")
 		client.SendMessage([]byte(Error5033))
 		return
 	}
@@ -170,7 +169,7 @@ func (i *Server) Handle(client *Conn) {
 	for {
 		frame, err := client.ReceiveByte(1024)
 		if err != nil {
-			fmt.Printf("error-7:%s\n", "数据接收失败")
+			fmt.Println("read data error")
 			client.SendMessage([]byte(Error550))
 			return
 		}
