@@ -2,44 +2,40 @@ package service
 
 import (
 	"bufio"
+	"crypto/tls"
 	"net"
 )
 
 type peer struct {
-	connect  *net.TCPConn
-	reader   *bufio.Reader
-	writer   *bufio.Writer
-	username string
-	password string
-	email    string
-	ip       *net.IPAddr
-	to       []string
-	data     []byte
+	connect   net.Conn
+	reader    *bufio.Reader
+	writer    *bufio.Writer
+	scanner   *bufio.Scanner
+	helloName string
+	username  string
+	password  string
+	state     tls.ConnectionState
 }
 
 func (i *peer) Initialize() *peer {
 	i.reader, i.writer = bufio.NewReader(i.connect), bufio.NewWriter(i.connect)
+	i.scanner = bufio.NewScanner(i.reader)
 	return i
 }
 
-func (i *peer) Connected() {
+func (i *peer) connected() {
 	_, _ = i.writer.Write([]byte(Status220))
 }
 
-func (i *peer) Close() {
+func (i *peer) close() {
 	_ = i.connect.Close()
 }
 
-func (i *peer) ReceiveByte(length int) ([]byte, error) {
-	data := make([]byte, length)
-	num, err := i.reader.Read(data)
-	if err != nil {
-		return nil, err
-	}
-	return data[:num], nil
+func (i *peer) readline() ([]byte, error) {
+	return i.reader.ReadSlice('\n')
 }
 
-func (i *peer) SendMessage(data []byte) {
-	_, _ = i.writer.Write(data)
+func (i *peer) send(data string) {
+	_, _ = i.writer.Write([]byte(data))
 	_ = i.writer.Flush()
 }

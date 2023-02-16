@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ebfb1b8-0cf9-4c99-bac0-1c011a253e2d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/smtp.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+    <list default="true" id="1cf47227-85fe-4b7f-a072-252423df186b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/cert.crt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cert.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/peer.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/peer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +32,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2LgGEL8OKtpjp0bmyNoUx3raRCF" />
+  <component name="ProjectId" id="2LkxD1p7LedhT36NyqZytWQfGxp" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -45,7 +48,7 @@
     "WebServerToolWindowFactoryState": "false",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "F:/PhpStudy/WWW/go/Shermie-Smtp",
+    "last_opened_file_path": "F:/PhpStudy/WWW/go/ShermieSmtp",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "vue.rearranger.settings.migration": "true"
@@ -53,7 +56,7 @@
 }]]></component>
   <component name="RunManager">
     <configuration name="go build github.com/kxg3030/shermie-smtp" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="smtp" />
+      <module name="ShermieSmtp" />
       <working_directory value="$PROJECT_DIR$" />
       <EXTENSION ID="net.ashald.envfile">
         <option name="IS_ENABLED" value="false" />
@@ -68,7 +71,7 @@
       <kind value="FILE" />
       <package value="github.com/kxg3030/shermie-smtp" />
       <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/Server.go" />
+      <filePath value="$PROJECT_DIR$/server.go" />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -83,5 +86,16 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/service/server.go</url>
+          <line>93</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	service.NewServer(9091).Start()
+	service.NewServer(9091).StartTLS()
 }
