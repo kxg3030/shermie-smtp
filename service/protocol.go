@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/base64"
-	"fmt"
 	"io"
 	"net/mail"
 	"net/textproto"
@@ -46,7 +45,7 @@ const Status2501 = "250 AUTH LOGIN PLAINOK\r\n250-AUTH=LOGIN PLAIN\r\n250-STARTT
 
 type Protocol struct {
 	client   *peer
-	envelope envelope
+	envelope *envelope
 }
 
 func (i *Protocol) unpack(command Command) {
@@ -160,7 +159,6 @@ func (i *Protocol) handleAUTH(command Command) {
 }
 
 func (i *Protocol) handleQUIT(command Command) {
-	fmt.Print(i.envelope.data)
 	i.client.send(Status221)
 
 }

@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1cf47227-85fe-4b7f-a072-252423df186b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/x.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/peer.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/peer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/protocol.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/protocol.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/server.go" afterDir="false" />
     </list>
@@ -53,6 +51,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\PhpStudy\WWW\go\ShermieSmtp" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\PhpStudy\WWW\go\ShermieSmtp" />
     </key>

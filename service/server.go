@@ -7,10 +7,13 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"github.com/kxg3030/shermie-smtp/utils"
+	"io"
 	"net"
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type Server struct {
@@ -18,8 +21,9 @@ type Server struct {
 	port     int
 	listener net.Listener
 	state    tls.ConnectionState
-	protocol Protocol
-	backlog  chan int
+	protocol *Protocol
+	group    sync.WaitGroup
+	backlog  chan struct{}
 }
 
 type Command struct {
@@ -33,8 +37,10 @@ type Command struct {
 func NewServer(port int) *Server {
 	return &Server{
 		port:     port,
-		protocol: Protocol{},
-		backlog:  make(chan int, 100),
+		protocol: &Protocol{},
+		// 同时允许最大处理100个客户端的请求
+		backlog: make(chan struct{}, 1),
+		group:   sync.WaitGroup{},
 	}
 }
 
@@ -90,19 +96,53 @@ func (i *Server) listen() {
 			fmt.Printf("%v", err)
 			continue
 		}
-		client := (&peer{connect: conn}).Initialize()
-		session, ok := conn.(*tls.Conn)
-		if ok {
-			state := session.ConnectionState()
-			client.state = &state
-		}
-		i.clients = append(i.clients, client)
-		i.protocol.client = client
-		go i.handle(client)
+		i.group.Add(1)
+		go func() {
+			client := (&peer{connect: conn}).Initialize()
+			defer client.close()
+			defer i.group.Done()
+			select {
+			case i.backlog <- struct{}{}:
+				session, ok := conn.(*tls.Conn)
+				if ok {
+					state := session.ConnectionState()
+					client.state = &state
+				}
+				i.clients = append(i.clients, client)
+				i.protocol.client = client
+				i.protocol.envelope = &envelope{}
+				i.handle(client)
+				<-i.backlog
+			default:
+				client.send(Error500)
+				return
+			}
+			go i.save()
+		}()
 	}
 }
 
-// TODO 限流
+func (i *Server) save() {
+	if i.protocol.envelope.data == nil {
+		return
+	}
+	message, err := utils.Parse(bytes.NewReader(i.protocol.envelope.data))
+	if err != nil {
+		fmt.Println("解析消息体错误：", err.Error())
+		return
+	}
+	attachment, _ := io.ReadAll(message.Attachments[0].Data)
+	file, err := os.OpenFile("./x.xlsx", os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	if err != nil {
+		fmt.Println("解析副本文件错误：", err.Error())
+		return
+	}
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
+	_, _ = file.Write(attachment)
+}
+
 func (i *Server) handle(client *peer) {
 	client.send(Status220)
 	defer client.close()
