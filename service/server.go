@@ -1,12 +1,12 @@
 package service
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/tls"
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"io"
 	"net"
 	"os"
 	"strconv"
@@ -19,6 +19,7 @@ type Server struct {
 	listener net.Listener
 	state    tls.ConnectionState
 	protocol Protocol
+	backlog  chan int
 }
 
 type Command struct {
@@ -33,6 +34,7 @@ func NewServer(port int) *Server {
 	return &Server{
 		port:     port,
 		protocol: Protocol{},
+		backlog:  make(chan int, 100),
 	}
 }
 
@@ -88,11 +90,11 @@ func (i *Server) listen() {
 			fmt.Printf("%v", err)
 			continue
 		}
-
 		client := (&peer{connect: conn}).Initialize()
 		session, ok := conn.(*tls.Conn)
 		if ok {
-			client.state = session.ConnectionState()
+			state := session.ConnectionState()
+			client.state = &state
 		}
 		i.clients = append(i.clients, client)
 		i.protocol.client = client
@@ -100,21 +102,22 @@ func (i *Server) listen() {
 	}
 }
 
+// TODO 限流
 func (i *Server) handle(client *peer) {
-	client.connected()
-	defer client.close()
 	client.send(Status220)
+	defer client.close()
 	for {
-		line, err := client.readline()
-		if err == io.EOF {
-			return
+		for client.scanner.Scan() {
+			line := client.scanner.Text()
+			command := i.parse([]byte(line))
+			i.protocol.unpack(command)
 		}
-		if err != nil {
-			fmt.Println("读取命令错误", err.Error())
-			return
+		err := client.scanner.Err()
+		if err == bufio.ErrTooLong {
+			client.send(Error501)
+			continue
 		}
-		command := i.parse(line)
-		i.protocol.unpack(command)
+		break
 	}
 }
 

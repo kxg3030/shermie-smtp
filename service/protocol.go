@@ -160,8 +160,9 @@ func (i *Protocol) handleAUTH(command Command) {
 }
 
 func (i *Protocol) handleQUIT(command Command) {
-	i.client.send(Status221)
 	fmt.Print(i.envelope.data)
+	i.client.send(Status221)
+
 }
 
 func (i *Protocol) handleNOOP(command Command) {
@@ -192,11 +193,12 @@ func (i *Protocol) handleSTARTTLS(command Command) {
 		i.client.send(Error550)
 		return
 	}
+	state := session.ConnectionState()
 	i.client.connect = session
 	i.client.reader = bufio.NewReader(i.client.connect)
 	i.client.writer = bufio.NewWriter(i.client.connect)
 	i.client.scanner = bufio.NewScanner(i.client.connect)
-	i.client.state = session.ConnectionState()
+	i.client.state = &state
 }
 
 func (i *Protocol) handleRCPT(command Command) {
@@ -225,10 +227,6 @@ func (i *Protocol) handleDATA(command Command) {
 		i.client.send(Error502)
 		return
 	}
-	if !i.client.state.HandshakeComplete {
-		i.client.send(Error502)
-		return
-	}
 	if i.envelope.recipients == nil || len(i.envelope.recipients) == 0 {
 		i.client.send(Error502)
 		return
@@ -237,9 +235,11 @@ func (i *Protocol) handleDATA(command Command) {
 	_ = i.client.connect.SetDeadline(time.Now().Add(time.Duration(10) * time.Second))
 	data := new(bytes.Buffer)
 	reader := textproto.NewReader(i.client.reader).DotReader()
-	_, err := io.CopyN(data, reader, 4096)
+	_, err := io.CopyN(data, reader, 1024*100)
 	if err == io.EOF {
+		i.envelope.data = data.Bytes()
 		i.client.send(Status250)
+		return
 	}
 	if err != nil {
 		return
@@ -249,9 +249,9 @@ func (i *Protocol) handleDATA(command Command) {
 	if err != nil {
 		return
 	}
-	i.envelope.data = data.Bytes()
-	i.client.send(Status250)
-	fmt.Println(string(i.envelope.data))
+	// 超过最大值
+	i.envelope.data = nil
+	i.client.send(Error501)
 }
 
 func (i *Protocol) handleMAIL(command Command) {

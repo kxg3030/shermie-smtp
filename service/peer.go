@@ -14,7 +14,7 @@ type peer struct {
 	helloName string
 	username  string
 	password  string
-	state     tls.ConnectionState
+	state     *tls.ConnectionState
 }
 
 func (i *peer) Initialize() *peer {

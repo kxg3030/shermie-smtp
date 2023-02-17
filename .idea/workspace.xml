@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1cf47227-85fe-4b7f-a072-252423df186b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/cert.crt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cert.key" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/peer.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/peer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/protocol.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/protocol.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,6 +52,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\PhpStudy\WWW\go\ShermieSmtp" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="go build github.com/kxg3030/shermie-smtp" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="ShermieSmtp" />
@@ -86,16 +89,5 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/service/server.go</url>
-          <line>93</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
