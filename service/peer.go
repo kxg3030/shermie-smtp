@@ -23,16 +23,8 @@ func (i *peer) Initialize() *peer {
 	return i
 }
 
-func (i *peer) connected() {
-	_, _ = i.writer.Write([]byte(Status220))
-}
-
 func (i *peer) close() {
 	_ = i.connect.Close()
-}
-
-func (i *peer) readline() ([]byte, error) {
-	return i.reader.ReadSlice('\n')
 }
 
 func (i *peer) send(data string) {
